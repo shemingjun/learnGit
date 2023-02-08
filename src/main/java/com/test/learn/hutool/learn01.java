@@ -1,0 +1,29 @@
+package com.test.learn.hutool;
+
+import lombok.extern.slf4j.Slf4j;
+
+/**
+ * @author 75290637
+ * @Title: learn01
+ * @ProjectName learnGit
+ * @date 2023/2/8 10:25
+ */
+@Slf4j
+public class learn01 {
+
+    public static void main(String[] args) {
+        log.info("ObjectId:{}", ObjectId.next());
+        log.info("ObjectId2:{}", ObjectId.nextWithUnderline());
+
+        for (int i = 0; i <20 ; i++) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    log.info("ObjectId:{}", ObjectId.next());
+                }
+            }).start();
+        }
+    }
+
+
+}
