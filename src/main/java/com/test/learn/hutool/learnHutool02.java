@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 
 @Slf4j
-public class learn02 {
+public class learnHutool02 {
     public static void main(String[] args) {
         log.info("中国内陆手机号:{}", PhoneUtil.isMobile("15026672711"));
         log.info("中国内陆手机号:{}", PhoneUtil.hideBetween("15026672711"));

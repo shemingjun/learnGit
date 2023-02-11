@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
  * @date 2023/2/8 10:25
  */
 @Slf4j
-public class learn01 {
+public class learnHutool01 {
 
     public static void main(String[] args) {
         log.info("ObjectId:{}", ObjectId.next());

@@ -1,0 +1,61 @@
+package com.test.learn.hutool;
+
+import cn.hutool.core.date.DateUtil;
+import lombok.extern.slf4j.Slf4j;
+
+
+/**
+ * 时间处理
+ * @author 75290637
+ * @Title: learn03
+ * @ProjectName learnGit
+ * @date 2023/2/8 13:33
+ */
+@Slf4j
+public class learnHutool04 {
+    public static void main(String[] args) {
+        log.info("当前时间:{}", DateUtil.now());
+        log.info("当前时间:{}", DateUtil.date());
+        log.info("当前时间:{}", DateUtil.dateSecond());
+        log.info("时间戳转时间:{}", DateUtil.date(System.currentTimeMillis()));
+        log.info("当前时间戳:{}", DateUtil.current());
+        log.info("纳秒:{}",System.nanoTime());
+        log.info("当前时间戳秒:{}", DateUtil.currentSeconds());
+        log.info("当前时间:{}", DateUtil.today());
+        log.info("当前时间-年:{}", DateUtil.year(DateUtil.date()));
+        log.info("当前时间-季度:{}", DateUtil.quarter(DateUtil.date()));
+        log.info("当前时间-季度:{}", DateUtil.quarterEnum(DateUtil.date()));
+        log.info("当前时间-月份:{}", DateUtil.month(DateUtil.date()));
+        log.info("当前时间-月份:{}", DateUtil.monthEnum(DateUtil.date()));
+        log.info("当前时间-年周:{}", DateUtil.weekOfYear(DateUtil.date()));
+        log.info("当前时间-月周:{}", DateUtil.weekOfMonth(DateUtil.date()));
+        log.info("当前时间-天月:{}", DateUtil.dayOfMonth(DateUtil.date()));
+        log.info("当前时间-天年:{}", DateUtil.dayOfYear(DateUtil.date()));
+        log.info("当前时间-天周:{}", DateUtil.dayOfWeek(DateUtil.date()));
+        log.info("当前时间-天周:{}", DateUtil.dayOfWeekEnum(DateUtil.date()));
+        log.info("当前时间-周末:{}", DateUtil.isWeekend(DateUtil.date()));
+        log.info("当前时间-小时:{}", DateUtil.hour(DateUtil.date(),true));
+        log.info("当前时间-分钟:{}", DateUtil.minute(DateUtil.date()));
+        log.info("当前时间-秒:{}", DateUtil.second(DateUtil.date()));
+        log.info("当前时间-毫秒:{}", DateUtil.millisecond(DateUtil.date()));
+        log.info("当前时间-上午:{}", DateUtil.isAM(DateUtil.date()));
+        log.info("当前时间-上午:{}", DateUtil.isPM(DateUtil.date()));
+        log.info("当前时间-今年:{}", DateUtil.thisYear());
+        log.info("当前时间-今月:{}", DateUtil.thisMonth());
+        log.info("当前时间-今月:{}", DateUtil.thisMonthEnum());
+        log.info("当前日期所在年份的第几周:{}", DateUtil.thisWeekOfYear());
+        log.info("当前日期所在月份的第几周:{}", DateUtil.thisWeekOfMonth());
+        log.info("当前日期是这个日期所在月份的第几天:{}", DateUtil.thisDayOfMonth());
+        log.info("中文时间:{}", DateUtil.formatChineseDate(DateUtil.date(), true, true));
+        log.info("中文时间:{}", DateUtil.formatChineseDate(DateUtil.date(), false, true));
+        log.info("星座：{}", DateUtil.getZodiac(2, 11));
+        log.info("生肖：{}", DateUtil.getChineseZodiac(2023));
+        log.info("生肖：{}", DateUtil.getChineseZodiac(1991));
+        log.info("生肖：{}", DateUtil.getChineseZodiac(1990));
+        log.info("本月的最后一天：{}", DateUtil.getLastDayOfMonth(DateUtil.date()));
+    }
+
+
+
+
+}
