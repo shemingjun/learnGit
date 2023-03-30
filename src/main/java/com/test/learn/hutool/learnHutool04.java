@@ -1,7 +1,14 @@
 package com.test.learn.hutool;
 
+import cn.hutool.core.date.DateField;
+import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
+import com.alibaba.fastjson2.JSON;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -53,6 +60,13 @@ public class learnHutool04 {
         log.info("生肖：{}", DateUtil.getChineseZodiac(1991));
         log.info("生肖：{}", DateUtil.getChineseZodiac(1990));
         log.info("本月的最后一天：{}", DateUtil.getLastDayOfMonth(DateUtil.date()));
+        List<DateTime> list = DateUtil.rangeToList(DateUtil.parse("2023-01-01"),DateUtil.date(), DateField.DAY_OF_MONTH);
+        List<String> newList = new ArrayList<String>();
+        for (DateTime dateTime : list) {
+
+            newList.add(DateUtil.format(dateTime, DatePattern.NORM_DATE_PATTERN));
+        }
+        log.info("时间段：{}", JSON.toJSONString(newList));
     }
 
 
