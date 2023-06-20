@@ -7,8 +7,8 @@ import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson2.JSON;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -50,6 +50,8 @@ public class learnHutool04 {
         log.info("当前时间-今年:{}", DateUtil.thisYear());
         log.info("当前时间-今月:{}", DateUtil.thisMonth());
         log.info("当前时间-今月:{}", DateUtil.thisMonthEnum());
+        log.info("获取某年的开始时间:{}", DateUtil.beginOfYear(DateUtil.date()));
+        log.info("获取某年的结束时间:{}", DateUtil.endOfYear(DateUtil.date()));
         log.info("当前日期所在年份的第几周:{}", DateUtil.thisWeekOfYear());
         log.info("当前日期所在月份的第几周:{}", DateUtil.thisWeekOfMonth());
         log.info("当前日期是这个日期所在月份的第几天:{}", DateUtil.thisDayOfMonth());
@@ -60,13 +62,27 @@ public class learnHutool04 {
         log.info("生肖：{}", DateUtil.getChineseZodiac(1991));
         log.info("生肖：{}", DateUtil.getChineseZodiac(1990));
         log.info("本月的最后一天：{}", DateUtil.getLastDayOfMonth(DateUtil.date()));
-        List<DateTime> list = DateUtil.rangeToList(DateUtil.parse("2023-01-01"),DateUtil.date(), DateField.DAY_OF_MONTH);
+        List<DateTime> list = DateUtil.rangeToList(DateUtil.parse("2023-01-01"),DateUtil.date(), DateField.MONTH);
         List<String> newList = new ArrayList<String>();
         for (DateTime dateTime : list) {
 
             newList.add(DateUtil.format(dateTime, DatePattern.NORM_DATE_PATTERN));
         }
         log.info("时间段：{}", JSON.toJSONString(newList));
+
+        List<String> stringList = DateUtil.rangeFunc(DateUtil.beginOfYear(DateUtil.date()), DateUtil.date(), DateField.MONTH,  d -> DateUtil.format(d, DatePattern.NORM_DATETIME_PATTERN));
+        log.info("时间段：{}", JSON.toJSONString(stringList));
+
+
+        Map<Date, String> map = new HashMap<Date, String>();
+        map.put(DateUtil.date().offset(DateField.HOUR, 4), "444444");
+        map.put(DateUtil.date(), "111111");
+        map.put(DateUtil.date().offset(DateField.HOUR, 2), "222222");
+        map.put(DateUtil.date().offset(DateField.HOUR, 3), "3333333");
+        List<Map.Entry<Date, String>> listKey = new ArrayList<>(map.entrySet());
+        log.info("排序前：{}", JSON.toJSONString(listKey));
+        listKey = listKey.stream().sorted((o1,o2) -> DateUtil.compare(o2.getKey(), o1.getKey())).collect(Collectors.toList());
+        log.info("排序后：{}", JSON.toJSONString(listKey));
     }
 
 
