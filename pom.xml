@@ -12,6 +12,8 @@
     <groupId>com.test</groupId>
     <artifactId>learn</artifactId>
     <version>0.0.1</version>
+    <packaging>jar</packaging>
+
     <name>learnGit</name>
     <description>learn</description>
 
@@ -147,6 +149,7 @@
     </dependencies>
 
     <build>
+        <finalName>${project.name}.${project.version}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
