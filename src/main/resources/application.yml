@@ -10,4 +10,14 @@ spring:
     url: jdbc:mysql://localhost:3306/user_db?useUnicode=true
     username: root
     password: 123456
-    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+
+
+
+# MP配置
+mybatis-plus:
+  # 配置mapper的扫描，找到所有的 mapper.xml 映射文件
+  type-aliases-package: com.test.learn.**.entity,com.test.learn.**.dto
+  # 搜索指定包别名
+  mapper-locations: classpath*:mybatis/**/*Mapper.xml

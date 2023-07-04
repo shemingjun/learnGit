@@ -1,4 +1,4 @@
-package com.test.learn.config;
+package com.test.learn.config.oauth2;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
