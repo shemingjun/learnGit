@@ -45,7 +45,7 @@ public class MysqlGenerator {
                 )
                 // 包配置
                 .packageConfig((scanner, builder) -> builder
-                                .entity("domain")
+//                                .entity("domain")
                                 .parent("com.test.learn")
 //                                .parent("com")
                                 .pathInfo(Collections.singletonMap(OutputFile.xml, System.getProperty("user.dir") + "/src/main/resources/mybatis/"))

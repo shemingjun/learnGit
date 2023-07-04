@@ -80,7 +80,11 @@
             <artifactId>mybatis-plus-generator</artifactId>
             <version>3.5.3.1</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity-engine-core</artifactId>
+            <version>2.3</version>
+        </dependency>
 
         <dependency>
             <groupId>com.github.jsqlparser</groupId>
@@ -126,6 +130,12 @@
             <groupId>com.baomidou</groupId>
             <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
             <version>3.6.1</version>
+        </dependency>
+
+        <!-- 自定义验证注解 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
 
     </dependencies>

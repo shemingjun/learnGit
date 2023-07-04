@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
  * @author ruoyi
  */
 @Configuration
-@MapperScan({"com.test.learn.mapper"})
+@MapperScan({"com.test.learn.mapper","com.test.learn.**.mapper"})
 public class MyBatisPlusConfig {
 
     /**
