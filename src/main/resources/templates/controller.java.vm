@@ -4,6 +4,11 @@ import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.CharsetUtil;
 import com.alibaba.excel.EasyExcel;
+import com.test.learn.utils.AjaxResult;
+import com.test.learn.utils.BaseController;
+import com.test.learn.utils.annotation.Log;
+import com.test.learn.utils.enums.BusinessType;
+import com.test.learn.utils.page.TableDataInfo;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.URLEncoder;
@@ -20,8 +25,6 @@ import com.ruoyi.framework.aspectj.lang.annotation.Log;
 import com.ruoyi.framework.aspectj.lang.enums.BusinessType;
 import ${package.Entity}.${entity};
 import ${package.Service}.${table.serviceName};
-import com.ruoyi.framework.web.domain.AjaxResult;
-import com.ruoyi.framework.web.page.TableDataInfo;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import ${package.Parent}.dto.${entity}DTO;
 #if(${swagger})

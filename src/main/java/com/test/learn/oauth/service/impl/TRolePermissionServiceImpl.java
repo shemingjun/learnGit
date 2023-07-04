@@ -1,4 +1,4 @@
-package ${package.ServiceImpl};
+package com.test.learn.oauth.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DatePattern;
@@ -21,11 +21,11 @@ import com.alibaba.excel.read.metadata.property.ExcelReadHeadProperty;
 import com.alibaba.excel.metadata.Head;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.github.pagehelper.PageHelper;
-import ${package.Entity}.${entity};
-import ${package.Parent}.dto.${entity}DTO;
-import ${package.Mapper}.${table.mapperName};
-import ${package.Service}.${table.serviceName};
-import ${superServiceImplClassPackage};
+import com.test.learn.oauth.entity.TRolePermission;
+import com.test.learn.oauth.dto.TRolePermissionDTO;
+import com.test.learn.oauth.mapper.TRolePermissionMapper;
+import com.test.learn.oauth.service.ITRolePermissionService;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.test.learn.utils.AjaxResult;
 import com.test.learn.utils.BeanValidators;
 import com.test.learn.utils.Constants;
@@ -56,78 +56,49 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * <p>
- * $!{table.comment} 服务实现类
+ *  服务实现类
  * </p>
  *
- * @author ${author}
- * @since ${date}
+ * @author smj
+ * @since 2023-07-04
  */
 @Slf4j
 @Service
-#if(${kotlin})
-open class ${table.serviceImplName} : ${superServiceImplClass}<${table.mapperName}, ${entity}>(), ${table.serviceName} {
-
-}
-#else
-public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.mapperName}, ${entity}> implements ${table.serviceName} {
+public class TRolePermissionServiceImpl extends ServiceImpl<TRolePermissionMapper, TRolePermission> implements ITRolePermissionService {
     @Resource
     protected Validator validator;
     @Resource
-    private ${table.mapperName} ${table.entityPath}Mapper;
+    private TRolePermissionMapper tRolePermissionMapper;
     @Resource(name = "threadPoolTaskExecutor")
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
     @Override
-    public int save${entity}(${entity} ${table.entityPath}) {
+    public int saveTRolePermission(TRolePermission tRolePermission) {
         int result = 0;
-        if (${table.entityPath}Mapper.exists(new LambdaQueryWrapper<${entity}>()
-        #foreach($field in ${table.fields})
-            #set($getprefix="get")
-            #if(!${field.keyFlag})
-                .eq(${entity}::${getprefix}${field.capitalName},${table.entityPath}.${getprefix}${field.capitalName}())
-            #end
-        #end
+        if (tRolePermissionMapper.exists(new LambdaQueryWrapper<TRolePermission>()
             )){
-            result = ${table.entityPath}Mapper.update(${table.entityPath},new LambdaQueryWrapper<${entity}>()
-            #foreach($field in ${table.fields})
-                #set($getprefix="get")
-                #if(!${field.keyFlag})
-                    .eq(${entity}::${getprefix}${field.capitalName},${table.entityPath}.${getprefix}${field.capitalName}())
-                #end
-            #end
+            result = tRolePermissionMapper.update(tRolePermission,new LambdaQueryWrapper<TRolePermission>()
             );
         } else {
-            result = ${table.entityPath}Mapper.insert(${table.entityPath});
+            result = tRolePermissionMapper.insert(tRolePermission);
         }
         return result;
     }
 
     @Override
-    public AjaxResult update${entity}(${entity} ${table.entityPath}) {
+    public AjaxResult updateTRolePermission(TRolePermission tRolePermission) {
         int result = 0;
-        if (${table.entityPath}Mapper.exists(new LambdaQueryWrapper<${entity}>()
-    #foreach($field in ${table.fields})
-        #set($getprefix="get")
-        #if(!${field.keyFlag})
-                .eq(${entity}::${getprefix}${field.capitalName},${table.entityPath}.${getprefix}${field.capitalName}())
-        #end
-    #end
-    #foreach($field in ${table.commonFields})
-        #set($getprefix="get")
-        #if(${field.keyFlag})
-                .notIn(${entity}::${getprefix}${field.capitalName},${table.entityPath}.${getprefix}${field.capitalName}())
-        #end
-    #end
+        if (tRolePermissionMapper.exists(new LambdaQueryWrapper<TRolePermission>()
         )){
             return AjaxResult.error("XXXX、XXXX、XXXXXX 已存在！");
         } else {
-            result = ${table.entityPath}Mapper.updateById(${table.entityPath});
+            result = tRolePermissionMapper.updateById(tRolePermission);
         }
         return AjaxResult.success(result > 0);
     }
 
         /**
-         * 导入$!{table.comment}信息
+         * 导入信息
          *
          * @param file
          * @return 结果
@@ -140,7 +111,7 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
             StringBuilder successMsg = new StringBuilder();
             StringBuilder failureMsg = new StringBuilder();
             try {
-                EasyExcel.read(file.getInputStream(), ${entity}.class, new ReadListener<${entity}>() {
+                EasyExcel.read(file.getInputStream(), TRolePermission.class, new ReadListener<TRolePermission>() {
                 /**
                  * 单次缓存的数据量
                  */
@@ -148,7 +119,7 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
                 /**
                  *临时存储
                  */
-                private List<${entity}> cachedDataList = ListUtils.newArrayListWithExpectedSize(BATCH_COUNT);
+                private List<TRolePermission> cachedDataList = ListUtils.newArrayListWithExpectedSize(BATCH_COUNT);
 
                 @Override
                 public void onException(Exception exception, AnalysisContext context) {
@@ -158,7 +129,7 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
                 }
 
                 @Override
-                public void invoke(${entity} data, AnalysisContext context) {
+                public void invoke(TRolePermission data, AnalysisContext context) {
                     // 非必空字段校验
                     Map<String,Object> map = BeanUtil.beanToMap(data, false,false);
                     ReadHolder currentReadHolder = context.currentReadHolder();
@@ -192,11 +163,11 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
                     AtomicInteger successNum = new AtomicInteger();
                     AtomicInteger failureNum = new AtomicInteger();
                     StringBuilder failureMsg = new StringBuilder();
-                    for (${entity} ${table.entityPath} : cachedDataList){
+                    for (TRolePermission tRolePermission : cachedDataList){
                         try{
-                            BeanValidators.validateWithException(validator, ${table.entityPath});
+                            BeanValidators.validateWithException(validator, tRolePermission);
                             CompletableFuture.runAsync(() -> {
-                                save${entity}(${table.entityPath});
+                                saveTRolePermission(tRolePermission);
                                 successNum.getAndIncrement();
                                 successMsg.append("<br/>" + successNum.get() + "、 " + " 导入成功");
                             }, threadPoolTaskExecutor).whenComplete((v,e)->{
@@ -237,18 +208,18 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
         }
 
         @Override
-        public void export(HttpServletResponse response, ${entity} ${table.entityPath}){
-            final Integer[] total = {${table.entityPath}Mapper.selectCount(new LambdaQueryWrapper<>(${table.entityPath})).intValue()};
+        public void export(HttpServletResponse response, TRolePermission tRolePermission){
+            final Integer[] total = {tRolePermissionMapper.selectCount(new LambdaQueryWrapper<>(tRolePermission)).intValue()};
             if(total[0] == 0){
                 try {
-                    String fileName="$!{table.comment}_"+DateUtil.format(DateUtil.date(),DatePattern.PURE_DATETIME_MS_PATTERN)+"_"+System.currentTimeMillis()+".xlsx";
+                    String fileName="_"+DateUtil.format(DateUtil.date(),DatePattern.PURE_DATETIME_MS_PATTERN)+"_"+System.currentTimeMillis()+".xlsx";
                     response.reset();
                     response.setCharacterEncoding("utf8");
                     response.setHeader("Content-Disposition","attachment;filename="+URLEncoder.encode(fileName, CharsetUtil.UTF_8));
                     response.setContentType("application/octet-stream");
                     response.setHeader("Access-Control-Expose-Headers","Content-Disposition");
                     response.setHeader("luxsan","luxsan");
-                    EasyExcel.write(response.getOutputStream(), ${entity}DTO.class).sheet("数据").doWrite(new ArrayList<>());
+                    EasyExcel.write(response.getOutputStream(), TRolePermissionDTO.class).sheet("数据").doWrite(new ArrayList<>());
                 } catch (IOException ignored) {}
             }
             Integer sheetDataRows = Constants.SHEET_COUNT;
@@ -259,12 +230,12 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
             int lastSheetWriteCount = total[0] % sheetDataRows == 0 ? oneSheetWriteCount[0] : (total[0] % sheetDataRows % writeDataRows == 0 ? (total[0] % sheetDataRows / writeDataRows) : (total[0] % sheetDataRows / writeDataRows + 1));
 
             if (sheetNum[0] <= maxSheetNum[0]){
-                writExcel(response, sheetNum[0], oneSheetWriteCount[0],lastSheetWriteCount,${table.entityPath},null,0);
+                writExcel(response, sheetNum[0], oneSheetWriteCount[0],lastSheetWriteCount,tRolePermission,null,0);
             } else {
                 // 分成多个文件 压缩响应
-                String filePath = ${table.serviceImplName}.class.getResource("/").getPath()+
+                String filePath = TRolePermissionServiceImpl.class.getResource("/").getPath()+
                 File.separator + DateUtil.format(DateUtil.date(),DatePattern.PURE_DATETIME_MS_PATTERN) +
-                File.separator + "$!{table.comment}_" + DateUtil.format(DateUtil.date(), DatePattern.PURE_DATETIME_MS_PATTERN)+ "_" +System.currentTimeMillis();
+                File.separator + "_" + DateUtil.format(DateUtil.date(), DatePattern.PURE_DATETIME_MS_PATTERN)+ "_" +System.currentTimeMillis();
                 log.info("filePath:{}", filePath);
                 FileUtil.mkdir(new File(filePath));
                 int fileNum = sheetNum[0] % maxSheetNum[0] == 0 ? (sheetNum[0] / maxSheetNum[0]) : (sheetNum[0] / maxSheetNum[0]) + 1;
@@ -272,7 +243,7 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
                 for (int f = 0; f < fileNum; f++) {
                     int finalF = f;
                     CompletableFuture.runAsync(() -> {
-                        String fileName = filePath + File.separator + "$!{table.comment}_" + DateUtil.format(DateUtil.date(), DatePattern.PURE_DATETIME_MS_PATTERN)+ "_" +System.currentTimeMillis() +"_" +(finalF +1)+ ".xlsx";
+                        String fileName = filePath + File.separator + "_" + DateUtil.format(DateUtil.date(), DatePattern.PURE_DATETIME_MS_PATTERN)+ "_" +System.currentTimeMillis() +"_" +(finalF +1)+ ".xlsx";
                         int oneSheetWriteCount2 = 0;
                         int lastSheetWriteCount2 = oneSheetWriteCount[0];
                         if (finalF == fileNum-1){
@@ -283,7 +254,7 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
                             maxSheetNum[0] = sheetNum[0];
                             oneSheetWriteCount[0] = oneSheetWriteCount2;
                         }
-                        writExcel(response, maxSheetNum[0], oneSheetWriteCount[0],lastSheetWriteCount2,${table.entityPath},fileName , finalF);
+                        writExcel(response, maxSheetNum[0], oneSheetWriteCount[0],lastSheetWriteCount2,tRolePermission,fileName , finalF);
                     },threadPoolTaskExecutor).whenComplete((v,e) -> {
                     countDownLatch.countDown();
                     });
@@ -325,31 +296,31 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
         }
 
     public void writExcel(HttpServletResponse response,int sheetNum,int oneSheetWriteCount,int lastSheetWriteCount,
-        ${entity} ${table.entityPath},String fileName,int f){
+        TRolePermission tRolePermission,String fileName,int f){
         try {
             if (StrUtil.isEmpty(fileName)){
-                String file = "$!{table.comment}_" + DateUtil.format(DateUtil.date(), DatePattern.PURE_DATETIME_MS_PATTERN)+ "_" +System.currentTimeMillis() + ".xlsx";
+                String file = "_" + DateUtil.format(DateUtil.date(), DatePattern.PURE_DATETIME_MS_PATTERN)+ "_" +System.currentTimeMillis() + ".xlsx";
                 response.reset();
                 response.setCharacterEncoding("utf8");
                 response.setHeader("Content-Disposition", "attachment;filename=" +URLEncoder.encode(file, CharsetUtil.UTF_8));
                 response.setContentType("application/octet-stream");
                 response.setHeader("Access-Control-Expose-Headers", "Content-Disposition");
                 response.setHeader("luxsan", "luxsan");
-                try (ExcelWriter excelWriter = EasyExcel.write(response.getOutputStream(), ${entity}DTO.class).build()) {
-                    handleExcel(excelWriter, sheetNum, oneSheetWriteCount, lastSheetWriteCount, ${table.entityPath}, f);
+                try (ExcelWriter excelWriter = EasyExcel.write(response.getOutputStream(), TRolePermissionDTO.class).build()) {
+                    handleExcel(excelWriter, sheetNum, oneSheetWriteCount, lastSheetWriteCount, tRolePermission, f);
                 } catch (IOException ignored) {}
             } else {
-                try (ExcelWriter excelWriter = EasyExcel.write(fileName, ${entity}DTO.class).build()) {
-                    handleExcel(excelWriter, sheetNum, oneSheetWriteCount, lastSheetWriteCount, ${table.entityPath}, f);
+                try (ExcelWriter excelWriter = EasyExcel.write(fileName, TRolePermissionDTO.class).build()) {
+                    handleExcel(excelWriter, sheetNum, oneSheetWriteCount, lastSheetWriteCount, tRolePermission, f);
                 }
             }
         } catch (Exception e) {
         e.printStackTrace();
         }
     }
-    private void handleExcel(ExcelWriter excelWriter, int sheetNum, int oneSheetWriteCount, int lastSheetWriteCount, ${entity} ${table.entityPath}, int f) {
+    private void handleExcel(ExcelWriter excelWriter, int sheetNum, int oneSheetWriteCount, int lastSheetWriteCount, TRolePermission tRolePermission, int f) {
         for (int i = 0; i < sheetNum; i++) {
-            WriteSheet writeSheet = EasyExcel.writerSheet(i, "$!{table.comment}报表" + (i+1)).build();
+            WriteSheet writeSheet = EasyExcel.writerSheet(i, "报表" + (i+1)).build();
             CountDownLatch countDownLatch = new CountDownLatch((i != sheetNum - 1 || i == 0 ? oneSheetWriteCount : lastSheetWriteCount));
             for (int j = 0; j < (i != sheetNum - 1 || i == 0 ? oneSheetWriteCount : lastSheetWriteCount); j++) {
                 int finalJ = j;
@@ -360,7 +331,7 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
                     } else {
                         PageHelper.startPage(finalJ + 1 + oneSheetWriteCount * finalI, Constants.SHEET_WRITE_NUM,false);
                     }
-                    List<${entity}> data = ${table.entityPath}Mapper.selectList(new LambdaQueryWrapper<${entity}>(${table.entityPath}));
+                    List<TRolePermission> data = tRolePermissionMapper.selectList(new LambdaQueryWrapper<TRolePermission>(tRolePermission));
                     synchronized (excelWriter){
                         excelWriter.write(data, writeSheet);
                     }
@@ -377,4 +348,3 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
         }
     }
 }
-#end

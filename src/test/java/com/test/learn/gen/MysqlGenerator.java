@@ -4,8 +4,10 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.generator.FastAutoGenerator;
 import com.baomidou.mybatisplus.generator.config.DataSourceConfig;
 import com.baomidou.mybatisplus.generator.config.OutputFile;
+import com.baomidou.mybatisplus.generator.config.builder.CustomFile;
 import com.baomidou.mybatisplus.generator.config.converts.MySqlTypeConvert;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
+import com.test.learn.utils.BaseController;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -52,28 +54,29 @@ public class MysqlGenerator {
                         .moduleName(scanner.apply("请输入模块名"))
 //                                .moduleName("test")
                 )
-                /*.injectionConfig(builder -> builder
+                .injectionConfig(builder -> builder
                         .customFile(new CustomFile.Builder()
                                 .fileName("DTO.java")
                                 .templatePath("/templates/entityDTO.java.vm")
                                 .packageName("dto")
                                 .enableFileOverride().build())
-                        .customFile(new CustomFile.Builder()
-                                .fileName(".js")
-                                .templatePath("/templates/api.js.vm")
-                                .packageName("static")
-                                .enableFileOverride().build())
-                        .customFile(new CustomFile.Builder()
-                                .fileName("Index.vue")
-                                .templatePath("/templates/index.vue.vm")
-                                .packageName("static")
-                                .enableFileOverride().build())
-                        .customFile(new CustomFile.Builder()
-                                .fileName(".SQL")
-                                .templatePath("/templates/sql.vm")
-                                .packageName("sql")
-                                .enableFileOverride().build())
-                )*/
+//                        .customFile(new CustomFile.Builder()
+//                                .fileName(".js")
+//                                .templatePath("/templates/api.js.vm")
+//                                .packageName("static")
+//                                .enableFileOverride().build())
+//                        .customFile(new CustomFile.Builder()
+//                                .fileName("Index.vue")
+//                                .templatePath("/templates/index.vue.vm")
+//                                .packageName("static")
+//                                .enableFileOverride().build())
+//                        .customFile(new CustomFile.Builder()
+//                                .fileName(".SQL")
+//                                .templatePath("/templates/sql.vm")
+//                                .packageName("sql")
+//                                .enableFileOverride().build()
+//                        )
+                )
 
                 // 策略配置
                 .strategyConfig((scanner, builder) -> builder
@@ -98,7 +101,7 @@ public class MysqlGenerator {
 //                        .addSuperEntityColumns(superEntityColumns())
                         .controllerBuilder()
                         .enableRestStyle()
-//                        .superClass(BaseController.class)
+                        .superClass(BaseController.class)
                         .enableFileOverride()
                         .serviceBuilder()
                         .enableFileOverride()
