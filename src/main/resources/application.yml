@@ -1,0 +1,13 @@
+server:
+  port: 8082
+
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+    allow-circular-references: true
+  datasource:
+    url: jdbc:mysql://localhost:3306/user_db?useUnicode=true
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.jdbc.Driver

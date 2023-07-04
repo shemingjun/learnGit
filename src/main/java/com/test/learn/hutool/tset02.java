@@ -1,4 +1,4 @@
-package com.test.learn;
+package com.test.learn.hutool;
 
 /**
  * @author smj
