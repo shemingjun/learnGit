@@ -1,0 +1,172 @@
+package ${package.Entity};
+
+import cn.hutool.core.date.DatePattern;
+import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
+import com.alibaba.excel.annotation.write.style.ColumnWidth;
+#foreach($pkg in ${table.importPackages})
+import ${pkg};
+#end
+import com.alibaba.excel.annotation.ExcelProperty;
+import com.alibaba.excel.annotation.format.DateTimeFormat;
+import com.alibaba.excel.annotation.write.style.HeadFontStyle;
+import com.baomidou.mybatisplus.annotation.*;
+#if(${swagger})
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+#end
+#if(${entityLombokModel})
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Data;
+#end
+import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import javax.validation.constraints.NotEmpty;
+import java.math.BigDecimal;
+/**
+ * <p>
+ * $!{table.comment}
+ *
+ * </p>
+ *
+ * @author ${author}
+ * @since ${date}
+ */
+#if(${swagger})
+@ApiModel(value = "${entity}对象", description = "$!{table.comment}")
+#end
+@ExcelIgnoreUnannotated
+@HeadFontStyle(fontHeightInPoints = 10)
+#if(${entityLombokModel})
+@EqualsAndHashCode(callSuper = true)
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+#end
+#if(${table.convert})
+@KeySequence("${schemaName}SEQ_${table.name}")
+    #set($end=$schemaName.length() - 1)
+    #set($schemaName=$schemaName.substring(0,$end))
+@TableName(value="${table.name}",schema = "${schemaName}")
+#end
+#if(${superEntityClass})
+public class ${entity} extends ${superEntityClass}#if(${activeRecord})<${entity}>#end {
+#elseif(${activeRecord})
+public class ${entity} extends Model<${entity}> {
+#elseif(${entitySerialVersionUID})
+public class ${entity} implements Serializable {
+#else
+public class ${entity} {
+#end
+#if(${entitySerialVersionUID})
+
+    private static final long serialVersionUID = 1L;
+#end
+#foreach($field in ${table.commonFields})
+    #if(${field.keyFlag})##生成主键排在第一位
+    #if("$!field.comment" != "")
+    /**
+     * ${field.comment}
+     */
+    #if(${swagger})
+    @ApiModelProperty("${field.comment}")
+    #end
+    #end
+    #if(${field.keyIdentityFlag})
+    @TableId(value = "${field.annotationColumnName}", type = IdType.AUTO)
+    #elseif(!$null.isNull(${idType}) && "$!idType" != "")
+    @TableId(value = "${field.annotationColumnName}", type = IdType.${idType})
+    #elseif(${field.convert})
+    @TableId("${field.annotationColumnName}")
+    #end
+    private Long ${field.propertyName};
+    #end
+#end
+## ----------  BEGIN 字段循环遍历  ----------
+#foreach($field in ${table.fields})
+    #if("$!field.comment" != "")
+    /**
+     * ${field.comment}
+     */
+    #if(${swagger})
+    @ApiModelProperty("${field.comment}")
+    #end
+    #end
+#if(!${field.metaInfo.nullable})
+## 必填
+    @NotEmpty(message = "${field.comment}不能为空")
+#end
+## 普通字段
+#if(${field.fill})
+## -----   存在字段填充设置   -----
+  #if(${field.convert})
+    @TableField(value = "${field.annotationColumnName}", fill = FieldFill.${field.fill})
+  #else
+    @TableField(fill = FieldFill.${field.fill})
+  #end
+#elseif(${field.convert})
+    #if($field.propertyType == 'Timestamp')
+    @ColumnWidth(20)
+    @JsonFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
+    @DateTimeFormat(value = DatePattern.NORM_DATETIME_PATTERN)
+    #end
+    @TableField(value = "${field.annotationColumnName}")
+#end
+    @ExcelProperty(value = "${field.comment}")
+## 逻辑删除注解
+#if(${logicDeleteFieldName}==${field.name})
+    @TableLogic(value = "0",delval = "1")
+#end
+    private #if($field.propertyType == 'Timestamp')Date#elseif($field.keyFlag)Long#elseif($field.propertyType == 'Short')BigDecimal#else${field.propertyType}#end ${field.propertyName};
+
+#end
+## ----------  END 字段循环遍历  ----------
+#foreach($field in ${table.commonFields})
+    #if(!${field.keyFlag})
+    #if("$!field.comment" != "")
+    /**
+     * ${field.comment}
+     */
+    #if(${swagger})
+    @ApiModelProperty("${field.comment}")
+    #end
+    #end
+    #if($field.propertyType == 'Date')
+    @ColumnWidth(20)
+    @JsonFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
+    @DateTimeFormat(value = DatePattern.NORM_DATETIME_PATTERN)
+    #end
+    #if(($field.annotationColumnName.indexOf('PROPERTY') == -1) && $field.name != 'DEL_FLAG')
+    @ExcelProperty(value = "${field.comment}")
+    #end
+## 逻辑删除注解
+#if(${logicDeleteFieldName}==${field.name})
+    @TableLogic(value = "0",delval = "1")
+#end
+#if(${field.fill})
+    ## -----   存在字段填充设置   -----
+    #if(${field.convert})
+@TableField(value = "${field.annotationColumnName}", fill = FieldFill.${field.fill})
+    #else
+    @TableField(fill = FieldFill.${field.fill})
+    #end
+#else
+    @TableField(value = "${field.annotationColumnName}")
+#end
+    private #if($field.propertyType == 'Date')Date#elseif($field.keyFlag)Long#elseif($field.propertyType == 'Short')BigDecimal#else${field.propertyType}#end ${field.propertyName};
+    #end
+
+#end
+
+#if(${activeRecord})
+#foreach($field in ${table.commonFields})
+    #if(${field.keyFlag})##生成主键排在第一位
+    @Override
+    public Serializable pkVal() {
+        return ${field.propertyName};
+    }
+    #end
+#end
+#end
+}

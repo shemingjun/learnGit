@@ -1,0 +1,179 @@
+package ${package.Controller};
+
+import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.CharsetUtil;
+import com.alibaba.excel.EasyExcel;
+import lombok.extern.slf4j.Slf4j;
+
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import com.ruoyi.framework.aspectj.lang.annotation.Log;
+import com.ruoyi.framework.aspectj.lang.enums.BusinessType;
+import ${package.Entity}.${entity};
+import ${package.Service}.${table.serviceName};
+import com.ruoyi.framework.web.domain.AjaxResult;
+import com.ruoyi.framework.web.page.TableDataInfo;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import ${package.Parent}.dto.${entity}DTO;
+#if(${swagger})
+import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
+import com.github.xiaoymin.knife4j.annotations.ApiSupport;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+#end
+#if(${superControllerClassPackage})
+import ${superControllerClassPackage};
+#end
+
+/**
+ * <p>
+ * $!{table.comment} 前端控制器
+ * </p>
+ *
+ * @author ${author}
+ * @since ${date}
+ */
+#if(${swagger})
+@Api(tags = "$!{table.comment}")
+@ApiSupport(author = "smj",order = 1)
+#end
+@Slf4j
+@RestController
+@RequestMapping("#if(${package.ModuleName})/${package.ModuleName}#else'luxsan'#end/#if(${controllerMappingHyphenStyle})${controllerMappingHyphen}#else${table.entityPath}#end")
+#if(${superControllerClass})
+public class ${table.controllerName} extends ${superControllerClass} {
+#else
+public class ${table.controllerName} {
+#end
+    @Autowired
+    private ${table.serviceName} ${table.entityPath}Service;
+
+    /**
+     * 查询$!{table.comment}列表
+     */
+#if(${swagger})
+    @ApiOperation("查询$!{table.comment}列表")
+    @ApiOperationSupport(order = 1)
+#end
+    @PreAuthorize("@ss.hasPermi('#if(${package.ModuleName})${package.ModuleName}#else"luxsan"#end:${table.entityPath}:list')")
+    @GetMapping("/list")
+    public TableDataInfo list(${entity} ${table.entityPath}){
+        startPage();
+        List<${entity}> list= ${table.entityPath}Service.list(new LambdaQueryWrapper<${entity}>(${table.entityPath}));
+        return getDataTable(list);
+    }
+
+    /**
+     * 获取$!{table.comment}详细信息
+     */
+#if(${swagger})
+    @ApiOperation("获取$!{table.comment}详细信息")
+    @ApiOperationSupport(order = 5)
+#end
+    @PreAuthorize("@ss.hasPermi('#if(${package.ModuleName})${package.ModuleName}#else"luxsan"#end:${table.entityPath}:query')")
+    @GetMapping(value = "/{id}")
+    public AjaxResult getInfo(@PathVariable("id") Long id){
+        return AjaxResult.success(${table.entityPath}Service.getById(id));
+    }
+
+    /**
+     * 新增$!{table.comment}
+     */
+#if(${swagger})
+    @ApiOperation("新增$!{table.comment}")
+    @ApiOperationSupport(order = 6)
+#end
+    @PreAuthorize("@ss.hasPermi('#if(${package.ModuleName})${package.ModuleName}#else"luxsan"#end:${table.entityPath}:add')")
+    @Log(title = "$!{table.comment}" , businessType = BusinessType.INSERT)
+    @PostMapping("/add")
+    public AjaxResult add(@RequestBody ${entity} ${table.entityPath}){
+        return toAjax(${table.entityPath}Service.save${entity}(${table.entityPath}));
+    }
+
+    /**
+     * 修改$!{table.comment}
+     */
+#if(${swagger})
+    @ApiOperation("修改$!{table.comment}")
+    @ApiOperationSupport(order = 7)
+#end
+    @PreAuthorize("@ss.hasPermi('#if(${package.ModuleName})${package.ModuleName}#else"luxsan"#end:${table.entityPath}:edit')")
+    @Log(title = "$!{table.comment}" , businessType = BusinessType.UPDATE)
+    @PutMapping
+    public AjaxResult edit(@RequestBody ${entity} ${table.entityPath}){
+        return ${table.entityPath}Service.update${entity}(${table.entityPath});
+    }
+
+    /**
+     * 删除$!{table.comment}
+     */
+#if(${swagger})
+    @ApiOperation("删除$!{table.comment}")
+    @ApiOperationSupport(order = 8)
+#end
+    @PreAuthorize("@ss.hasPermi('#if(${package.ModuleName})${package.ModuleName}#else"luxsan"#end:${table.entityPath}:remove')")
+    @Log(title = "$!{table.comment}" , businessType = BusinessType.DELETE)
+    @DeleteMapping("/{ids}")
+    public AjaxResult remove(@PathVariable Long[]ids){
+        return toAjax(${table.entityPath}Service.removeByIds(Arrays.asList(ids)));
+    }
+
+    /**
+     * 导出$!{table.comment}
+     */
+    #if(${swagger})
+    @ApiOperation("导出$!{table.comment}")
+    @ApiOperationSupport(order = 2)
+    #end
+    @PreAuthorize("@ss.hasPermi('#if(${package.ModuleName})${package.ModuleName}#else"luxsan"#end:${table.entityPath}:export')")
+    @Log(title = "$!{table.comment}" , businessType = BusinessType.EXPORT)
+    @GetMapping("/export")
+    public void export(HttpServletResponse response,${entity} ${table.entityPath}){
+        ${table.entityPath}Service.export(response,${table.entityPath});
+    }
+
+    /**
+     * 导入$!{table.comment}列表
+     */
+    #if(${swagger})
+    @ApiOperation("导入$!{table.comment}")
+    @ApiOperationSupport(order = 3)
+    #end
+    @PreAuthorize("@ss.hasPermi('#if(${package.ModuleName})${package.ModuleName}#else"luxsan"#end:${table.entityPath}:import')")
+    @Log(title = "$!{table.comment}" , businessType = BusinessType.IMPORT)
+    @PostMapping("/importData")
+    public AjaxResult importData(MultipartFile file)throws Exception{
+        return AjaxResult.success(${table.entityPath}Service.importExcel(file));
+    }
+
+    /**
+     * 导出$!{table.comment}模板
+     */
+    #if(${swagger})
+    @ApiOperation("导出$!{table.comment}模板")
+    @ApiOperationSupport(order = 4)
+    #end
+    @PreAuthorize("@ss.hasPermi('#if(${package.ModuleName})${package.ModuleName}#else"luxsan"#end:${table.entityPath}:import')")
+    @GetMapping("/importTemplate")
+    public void importTemplate(HttpServletResponse response)throws IOException{
+        String fileName="$!{table.comment}_template"+ DateUtil.format(DateUtil.date(), DatePattern.PURE_DATETIME_MS_PATTERN)+"_"+System.currentTimeMillis()+".xlsx";
+        response.reset();
+        response.setCharacterEncoding("utf8");
+        response.setHeader("Content-Disposition","attachment;filename="+ URLEncoder.encode(fileName, CharsetUtil.UTF_8));
+        response.setContentType("application/octet-stream");
+        response.setHeader("Access-Control-Expose-Headers","Content-Disposition");
+        response.setHeader("luxsan","luxsan");
+        EasyExcel.write(response.getOutputStream(), ${entity}DTO.class).sheet("$!{table.comment}").doWrite(new ArrayList<>());
+    }
+
+}
+

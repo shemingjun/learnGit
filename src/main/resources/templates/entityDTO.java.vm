@@ -1,0 +1,78 @@
+package ${package.Parent}.dto;
+
+#foreach($pkg in ${table.importPackages})
+import ${pkg};
+#end
+import com.alibaba.excel.annotation.ExcelProperty;
+import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
+import com.alibaba.excel.annotation.format.DateTimeFormat;
+import com.alibaba.excel.annotation.write.style.HeadFontStyle;
+import java.math.BigDecimal;
+import java.util.Date;
+#if(${entityLombokModel})
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Data;
+#end
+
+/**
+ * <p>
+ * $!{table.comment}
+ *
+ * </p>
+ *
+ * @author ${author}
+ * @since ${date}
+ */
+@HeadFontStyle(fontHeightInPoints = 10)
+@ExcelIgnoreUnannotated
+#if(${entityLombokModel})
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+#end
+public class ${entity}DTO implements Serializable {
+#if(${entitySerialVersionUID})
+    private static final long serialVersionUID = 1L;
+#end
+## ----------  BEGIN 字段循环遍历  ----------
+#foreach($field in ${table.fields})
+#if("$!field.comment" != "")
+    /**
+     * ${field.comment}
+     */
+#end
+## 普通字段
+    #if($field.propertyType == 'Timestamp')
+    @ColumnWidth(20)
+    @JsonFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
+    @DateTimeFormat(value = DatePattern.NORM_DATETIME_PATTERN)
+    #end
+    @ExcelProperty(value = "${field.comment}")
+    private #if($field.propertyType == 'Timestamp')Date#elseif($field.keyFlag)Long#elseif($field.propertyType == 'Short')BigDecimal#else${field.propertyType}#end ${field.propertyName};
+#end
+
+
+#foreach($field in ${table.commonFields})
+    #if(${field.keyFlag})##生成主键排在第一位
+        #if("$!field.comment" != "")
+            /**
+             * ${field.comment}
+             */
+        #end
+    private Long ${field.propertyName};
+    #end
+#end
+#foreach($field in ${table.commonFields})
+    #if(!${field.keyFlag})
+        #if("$!field.comment" != "")
+            /**
+             * ${field.comment}
+             */
+        #end
+    private #if($field.propertyType == 'Date')Date#elseif($field.keyFlag)Long#elseif($field.propertyType == 'Short')BigDecimal#else${field.propertyType}#end ${field.propertyName};
+    #end
+
+#end
+
+}

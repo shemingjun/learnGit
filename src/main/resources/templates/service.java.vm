@@ -1,0 +1,42 @@
+package ${package.Service};
+
+import ${package.Entity}.${entity};
+import ${superServiceClassPackage};
+import com.ruoyi.framework.web.domain.AjaxResult;
+import org.springframework.web.multipart.MultipartFile;
+import javax.servlet.http.HttpServletResponse;
+/**
+ * <p>
+ * $!{table.comment} 服务类
+ * </p>
+ *
+ * @author ${author}
+ * @since ${date}
+ */
+#if(${kotlin})
+interface ${table.serviceName} : ${superServiceClass}<${entity}>
+#else
+public interface ${table.serviceName} extends ${superServiceClass}<${entity}> {
+
+    /**
+     * 保存$!{table.comment}信息
+     */
+    int save${entity}(${entity} ${table.entityPath});
+
+    /**
+     * 修改$!{table.comment}信息
+     */
+    AjaxResult update${entity}(${entity} ${table.entityPath});
+
+    /**
+     * 导入$!{table.comment}信息
+     * @return 结果
+     */
+    String importExcel(MultipartFile file);
+
+    /**
+     * 导出$!{table.comment}信息
+     */
+    void export(HttpServletResponse response, ${entity} ${table.entityPath});
+}
+#end

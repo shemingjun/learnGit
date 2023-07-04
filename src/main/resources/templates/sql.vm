@@ -1,0 +1,29 @@
+
+-- 父菜单ID
+select menu_id from sys_menu where menu_name = '$!{table.comment}' ;
+
+-- 菜单 SQL
+insert into sys_menu (menu_id, menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values(seq_sys_menu.nextval, '$!{table.comment}', '3', '1', '${table.entityPath}', '${package.ModuleName}/${table.entityPath}/${entity}Index', 1, 0, 'C', '0', '0', '${package.ModuleName}:${table.entityPath}:list', 'build', 'admin', sysdate, 'admin', sysdate, '$!{table.comment}菜单');
+
+
+
+-- 按钮 SQL
+insert into sys_menu (menu_id, menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values(seq_sys_menu.nextval, '$!{table.comment}查询', (select menu_id from sys_menu where menu_name = '$!{table.comment}'), '1',  '#', '', 1,  0, 'F', '0', '0', '${package.ModuleName}:${table.entityPath}:query',        '#', 'admin', sysdate, 'admin', sysdate, '');
+
+insert into sys_menu (menu_id, menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values(seq_sys_menu.nextval, '$!{table.comment}新增', (select menu_id from sys_menu where menu_name = '$!{table.comment}'), '2',  '#', '', 1,  0, 'F', '0', '0', '${package.ModuleName}:${table.entityPath}:add',          '#', 'admin', sysdate, 'admin', sysdate, '');
+
+insert into sys_menu (menu_id, menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values(seq_sys_menu.nextval, '$!{table.comment}修改', (select menu_id from sys_menu where menu_name = '$!{table.comment}'), '3',  '#', '', 1,  0, 'F', '0', '0', '${package.ModuleName}:${table.entityPath}:edit',         '#', 'admin', sysdate, 'admin', sysdate, '');
+
+insert into sys_menu (menu_id, menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values(seq_sys_menu.nextval, '$!{table.comment}删除', (select menu_id from sys_menu where menu_name = '$!{table.comment}'), '4',  '#', '', 1,  0, 'F', '0', '0', '${package.ModuleName}:${table.entityPath}:remove',       '#', 'admin', sysdate, 'admin', sysdate, '');
+
+insert into sys_menu (menu_id, menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values(seq_sys_menu.nextval, '$!{table.comment}导出', (select menu_id from sys_menu where menu_name = '$!{table.comment}'), '5',  '#', '', 1,  0, 'F', '0', '0', '${package.ModuleName}:${table.entityPath}:export',       '#', 'admin', sysdate, 'admin', sysdate, '');
+
+insert into sys_menu (menu_id, menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values(seq_sys_menu.nextval, '$!{table.comment}导入', (select menu_id from sys_menu where menu_name = '$!{table.comment}'), '6',  '#', '', 1,  0, 'F', '0', '0', '${package.ModuleName}:${table.entityPath}:import',       '#', 'admin', sysdate, 'admin', sysdate, '');
+

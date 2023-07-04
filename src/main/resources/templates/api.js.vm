@@ -1,0 +1,61 @@
+import request from '@/utils/request'
+
+// 查询$!{table.comment}列表
+export function list${entity}(query) {
+  return request({
+    url: '#if(${package.ModuleName})/${package.ModuleName}#end/${table.entityPath}/list',
+    method: 'get',
+    params: query
+  })
+}
+
+// 查询$!{table.comment}详细
+export function get${entity}(id) {
+  return request({
+    url: '#if(${package.ModuleName})/${package.ModuleName}#end/${table.entityPath}/' + id,
+    method: 'get'
+  })
+}
+
+// 新增$!{table.comment}
+export function add${entity}(data) {
+  return request({
+    url: '#if(${package.ModuleName})/${package.ModuleName}#end/${table.entityPath}/add',
+    method: 'post',
+    data: data
+  })
+}
+
+// 修改$!{table.comment}
+export function update${entity}(data) {
+  return request({
+    url: '#if(${package.ModuleName})/${package.ModuleName}#end/${table.entityPath}',
+    method: 'put',
+    data: data
+  })
+}
+
+// 删除$!{table.comment}
+export function del${entity}(id) {
+  return request({
+    url: '#if(${package.ModuleName})/${package.ModuleName}#end/${table.entityPath}/' + id,
+    method: 'delete'
+  })
+}
+export function downloadExcel(data) {
+  return request({
+    url: '#if(${package.ModuleName})/${package.ModuleName}#end/${table.entityPath}/export',
+    responseType: 'blob',
+    method: 'get',
+    params: data,
+    timeout: 0
+  })
+}
+export function downloadTemplateExcel() {
+  return request({
+    url: '#if(${package.ModuleName})/${package.ModuleName}#end/${table.entityPath}/importTemplate',
+    responseType: 'blob',
+    method: 'get',
+    timeout: 0
+  })
+}

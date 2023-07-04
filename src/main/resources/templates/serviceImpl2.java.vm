@@ -1,0 +1,253 @@
+package ${package.ServiceImpl};
+
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.StrUtil;
+import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.ExcelWriter;
+import com.alibaba.excel.context.AnalysisContext;
+import com.alibaba.excel.read.listener.ReadListener;
+import com.alibaba.excel.util.ListUtils;
+import com.alibaba.excel.write.metadata.WriteSheet;
+import com.alibaba.excel.read.metadata.holder.ReadHolder;
+import com.alibaba.excel.read.metadata.property.ExcelReadHeadProperty;
+import com.alibaba.excel.metadata.Head;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.github.pagehelper.PageHelper;
+import ${package.Entity}.${entity};
+import ${package.Parent}.dto.${entity}DTO;
+import ${package.Mapper}.${table.mapperName};
+import ${package.Service}.${table.serviceName};
+import ${superServiceImplClassPackage};
+import com.ruoyi.common.constant.Constants;
+import lombok.extern.slf4j.Slf4j;
+import lombok.SneakyThrows;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.multipart.MultipartFile;
+import com.ruoyi.common.utils.bean.BeanValidators;
+import com.ruoyi.common.exception.ServiceException;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Validator;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicInteger;
+import com.ruoyi.framework.web.domain.AjaxResult;
+
+/**
+ * <p>
+ * $!{table.comment} 服务实现类
+ * </p>
+ *
+ * @author ${author}
+ * @since ${date}
+ */
+@Slf4j
+@Service
+#if(${kotlin})
+open class ${table.serviceImplName} : ${superServiceImplClass}<${table.mapperName}, ${entity}>(), ${table.serviceName} {
+
+}
+#else
+public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.mapperName}, ${entity}> implements ${table.serviceName} {
+    @Autowired
+    protected Validator validator;
+    @Autowired
+    private ${table.mapperName} ${table.entityPath}Mapper;
+    @Resource(name = "threadPoolTaskExecutor")
+    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
+
+        /**
+         * 导入$!{table.comment}信息
+         *
+         * @param file
+         * @return 结果
+         */
+        @Override
+        @Transactional(rollbackFor = Exception.class)
+        public String importExcel(MultipartFile file) {
+            StringBuilder successMsg = new StringBuilder();
+            try {
+                EasyExcel.read(file.getInputStream(), ${entity}.class, new ReadListener<${entity}>() {
+                    /**
+                     * 单次缓存的数据量
+                     */
+                    public static final int BATCH_COUNT = 10000;
+                    /**
+                     *临时存储
+                     */
+                    private List<${entity}> cachedDataList = ListUtils.newArrayListWithExpectedSize(BATCH_COUNT);
+
+                    @Override
+                    public void invoke(${entity} data, AnalysisContext context) {
+                        // 非必空字段校验
+                        Map<String,Object> map = BeanUtil.beanToMap(data, false,false);
+                        ReadHolder currentReadHolder = context.currentReadHolder();
+                        ExcelReadHeadProperty excelReadHeadProperty = currentReadHolder.excelReadHeadProperty();
+                        Map<Integer, Head> headMap = excelReadHeadProperty.getHeadMap();
+                        headMap.forEach((key, value) ->{
+                            Field field = value.getField();
+                            NotEmpty notEmpty = field.getAnnotation(NotEmpty.class);
+                            NotNull notNull = field.getAnnotation(NotNull.class);
+                            if (ObjUtil.isEmpty(map.get(value.getFieldName()))
+                                    && (ObjUtil.isNotNull(notEmpty) || ObjUtil.isNotNull(notNull))){
+                                throw new ServiceException("第"+(context.readRowHolder().getRowIndex() +1)+"行，第"+(key+1)+"列，["+value.getHeadNameList().get(0)+"]必填不能为空，请完善数据后重新上传。");
+                            }
+                        });
+                        cachedDataList.add(data);
+                        if (cachedDataList.size() >= BATCH_COUNT) {
+                            saveData();
+                            // 存储完成清理 list
+                            cachedDataList = ListUtils.newArrayListWithExpectedSize(BATCH_COUNT);
+                        }
+                    }
+                    @Override
+                    public void doAfterAllAnalysed(AnalysisContext context) {
+                        saveData();
+                    }
+                    /**
+                     * 加上存储数据库
+                     */
+                    private void saveData() {
+                        CountDownLatch countDownLatch = new CountDownLatch(cachedDataList.size());
+                        AtomicInteger successNum = new AtomicInteger();
+                        int failureNum = 0;
+                        StringBuilder failureMsg = new StringBuilder();
+                        for (${entity} ${table.entityPath} : cachedDataList){
+                            try{
+                                BeanValidators.validateWithException(validator, ${table.entityPath});
+                                CompletableFuture.runAsync(() -> {
+                                    save${entity}(${table.entityPath});
+                                    successNum.getAndIncrement();
+                                    successMsg.append("<br/>" + successNum.get() + "、 " + " 导入成功");
+                                }, threadPoolTaskExecutor).whenComplete((v,e)->{
+                                    countDownLatch.countDown();
+                                });
+                            }catch (Exception e){
+                                failureNum++;
+                                String msg = "<br/>" + failureNum + "、 " + " 导入失败：";
+                                failureMsg.append(msg + e.getMessage());
+                                log.error(msg, e);
+                            }
+                        }
+                        try {
+                            countDownLatch.await();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        if (failureNum > 0) {
+                            failureMsg.insert(0, "很抱歉，导入失败！共 " + failureNum + " 条数据格式不正确，错误如下：");
+                            throw new ServiceException(failureMsg.toString());
+                        } else {
+                            successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum.get() + " 条，数据如下：");
+                        }
+                    }
+                }).sheet().doRead();
+            } catch (Exception e){
+                log.info("{}", e.getMessage());
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return e.getMessage();
+        }
+            return successMsg.toString();
+        }
+
+        @SneakyThrows
+        @Override
+        public void export(HttpServletResponse response, ${entity} ${table.entityPath}){
+            String fileName="$!{table.comment}_"+DateUtil.format(DateUtil.date(),DatePattern.PURE_DATETIME_MS_PATTERN)+"_"+System.currentTimeMillis()+".xlsx";
+            response.reset();
+            response.setCharacterEncoding("utf8");
+            response.setHeader("Content-Disposition","attachment;filename="+URLEncoder.encode(fileName, CharsetUtil.UTF_8));
+            response.setContentType("application/octet-stream");
+            response.setHeader("Access-Control-Expose-Headers","Content-Disposition");
+            response.setHeader("luxsan","luxsan");
+            int total = ${table.entityPath}Mapper.selectCount(new LambdaQueryWrapper<>(${table.entityPath})).intValue();
+            if(total==0){
+                try {
+                    EasyExcel.write(response.getOutputStream(), ${entity}DTO.class).sheet("数据").doWrite(new ArrayList<>());
+                } catch (IOException ignored) {}
+            }
+            Integer sheetDataRows = Constants.SHEET_COUNT;
+            Integer writeDataRows = Constants.SHEET_WRITE_NUM;
+            int sheetNum = total % sheetDataRows == 0 ? (total / sheetDataRows) : (total / sheetDataRows) + 1;
+            int oneSheetWriteCount = total > sheetDataRows ? sheetDataRows / writeDataRows : total % writeDataRows > 0 ? total / writeDataRows + 1 : total / writeDataRows;
+            int lastSheetWriteCount = total % sheetDataRows == 0 ? oneSheetWriteCount : (total % sheetDataRows % writeDataRows == 0 ? (total % sheetDataRows / writeDataRows) : (total%sheetDataRows / writeDataRows + 1));
+            List<${entity}>data = new ArrayList<>();
+            try(ExcelWriter excelWriter = EasyExcel.write(response.getOutputStream(), ${entity}.class).build()){
+                for(int i=0; i<sheetNum; i++){
+                    WriteSheet writeSheet = EasyExcel.writerSheet(i,"$!{table.comment}_"+(i+1)).build();
+                    for(int j=0;j<(i != sheetNum-1 || i == 0 ? oneSheetWriteCount : lastSheetWriteCount); j++){
+                        data.clear();
+                        PageHelper.startPage(j+1+oneSheetWriteCount*i, writeDataRows,false);
+                        data= ${table.entityPath}Mapper.selectList(new LambdaQueryWrapper<${entity}>(${table.entityPath}));
+                        excelWriter.write(data,writeSheet);
+                    }
+                }
+            } catch (Exception ignored){}
+        }
+
+        @Override
+        public int save${entity}(${entity} ${table.entityPath}) {
+            int result = 0;
+            if (${table.entityPath}Mapper.exists(new LambdaQueryWrapper<${entity}>()
+            #foreach($field in ${table.fields})
+                #set($getprefix="get")
+                #if(!${field.keyFlag})
+                    .eq(${entity}::${getprefix}${field.capitalName},${table.entityPath}.${getprefix}${field.capitalName}())
+                #end
+            #end
+                )){
+                result = ${table.entityPath}Mapper.update(${table.entityPath},new LambdaQueryWrapper<${entity}>()
+                #foreach($field in ${table.fields})
+                    #set($getprefix="get")
+                    #if(!${field.keyFlag})
+                        .eq(${entity}::${getprefix}${field.capitalName},${table.entityPath}.${getprefix}${field.capitalName}())
+                    #end
+                #end
+                );
+            } else {
+                result = ${table.entityPath}Mapper.insert(${table.entityPath});
+            }
+            return result;
+        }
+
+        @Override
+        public AjaxResult update${entity}(${entity} ${table.entityPath}) {
+            int result = 0;
+            if (${table.entityPath}Mapper.exists(new LambdaQueryWrapper<${entity}>()
+        #foreach($field in ${table.fields})
+            #set($getprefix="get")
+            #if(!${field.keyFlag})
+                    .eq(${entity}::${getprefix}${field.capitalName},${table.entityPath}.${getprefix}${field.capitalName}())
+            #end
+        #end
+        #foreach($field in ${table.commonFields})
+            #set($getprefix="get")
+            #if(${field.keyFlag})
+                    .notIn(${entity}::${getprefix}${field.capitalName},${table.entityPath}.${getprefix}${field.capitalName}())
+            #end
+        #end
+            )){
+                return AjaxResult.error("XXXX、XXXX、XXXXXX 已存在！");
+            } else {
+                result = ${table.entityPath}Mapper.updateById(${table.entityPath});
+            }
+            return AjaxResult.success(result > 0);
+        }
+}
+#end
