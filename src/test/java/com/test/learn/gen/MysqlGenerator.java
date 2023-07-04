@@ -1,12 +1,16 @@
 package com.test.learn.gen;
 
+import cn.hutool.core.date.DatePattern;
+import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.generator.FastAutoGenerator;
 import com.baomidou.mybatisplus.generator.config.DataSourceConfig;
 import com.baomidou.mybatisplus.generator.config.OutputFile;
 import com.baomidou.mybatisplus.generator.config.builder.CustomFile;
 import com.baomidou.mybatisplus.generator.config.converts.MySqlTypeConvert;
+import com.baomidou.mybatisplus.generator.config.rules.DateType;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
+import com.baomidou.mybatisplus.generator.fill.Column;
 import com.test.learn.utils.BaseController;
 
 import java.sql.SQLException;
@@ -40,8 +44,11 @@ public class MysqlGenerator {
         FastAutoGenerator.create(DATA_SOURCE_CONFIG)
                 // 全局配置
                 .globalConfig((scanner, builder) -> builder
+                                .dateType(DateType.ONLY_DATE)
+                                .enableSwagger()
                                 .disableOpenDir()
                                 .outputDir(System.getProperty("user.dir") + "/src/main/java")
+                                .commentDate(DatePattern.NORM_DATETIME_PATTERN)
                                 .author("smj")
 //                        .author(scanner.apply("请输入作者名称"))
                 )
@@ -51,7 +58,7 @@ public class MysqlGenerator {
                                 .parent("com.test.learn")
 //                                .parent("com")
                                 .pathInfo(Collections.singletonMap(OutputFile.xml, System.getProperty("user.dir") + "/src/main/resources/mybatis/"))
-                        .moduleName(scanner.apply("请输入模块名"))
+                        .moduleName(scanner.apply("请输入模块名："))
 //                                .moduleName("test")
                 )
                 .injectionConfig(builder -> builder
@@ -89,16 +96,16 @@ public class MysqlGenerator {
                         .enableChainModel()
                         .enableTableFieldAnnotation()
                         .enableActiveRecord()
-//                        .logicDeleteColumnName("DEL_FLAG")
-//                        .logicDeletePropertyName("delFlag")
+                        .logicDeleteColumnName("DEL_FLAG")
+                        .logicDeletePropertyName("delFlag")
                         .naming(NamingStrategy.underline_to_camel)
                         .columnNaming(NamingStrategy.underline_to_camel)
-//                        .addTableFills(new Column("ADD_DATE" , FieldFill.INSERT),
-//                                new Column("ADD_BY",FieldFill.INSERT),
-//                                new Column("EDIT_DATE" , FieldFill.INSERT_UPDATE),
-//                                new Column("EDIT_BY" , FieldFill.INSERT_UPDATE))
+                        .addTableFills(new Column("ADD_DATE" , FieldFill.INSERT),
+                                new Column("ADD_BY",FieldFill.INSERT),
+                                new Column("EDIT_DATE" , FieldFill.INSERT_UPDATE),
+                                new Column("EDIT_BY" , FieldFill.INSERT_UPDATE))
                         .idType(IdType.INPUT)
-//                        .addSuperEntityColumns(superEntityColumns())
+                        .addSuperEntityColumns(superEntityColumns())
                         .controllerBuilder()
                         .enableRestStyle()
                         .superClass(BaseController.class)

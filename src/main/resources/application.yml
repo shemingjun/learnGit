@@ -3,6 +3,9 @@ server:
 
 
 spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
   main:
     allow-bean-definition-overriding: true
     allow-circular-references: true
@@ -90,3 +93,14 @@ pagehelper:
   supportMethodsArguments: true
   params: count=countSql
   autoRuntimeDialect: true
+
+# swagger 配置
+knife4j:
+  #是否开启swagger
+  enable: true
+  #屏蔽所有Swagger的相关资源
+  production: false
+
+
+
+

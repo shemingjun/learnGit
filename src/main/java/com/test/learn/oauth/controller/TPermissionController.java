@@ -4,11 +4,15 @@ import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.CharsetUtil;
 import com.alibaba.excel.EasyExcel;
+import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
+import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import com.test.learn.utils.AjaxResult;
 import com.test.learn.utils.BaseController;
 import com.test.learn.utils.annotation.Log;
 import com.test.learn.utils.enums.BusinessType;
 import com.test.learn.utils.page.TableDataInfo;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.URLEncoder;
@@ -34,6 +38,8 @@ import com.test.learn.oauth.dto.TPermissionDTO;
  * @author smj
  * @since 2023-07-04
  */
+@Api(tags = "权限")
+@ApiSupport(author = "smj",order = 2)
 @Slf4j
 @RestController
 @RequestMapping("/oauth/tPermission")
@@ -44,6 +50,8 @@ public class TPermissionController extends BaseController {
     /**
      * 查询列表
      */
+    @ApiOperation("列表")
+    @ApiOperationSupport(order = 1)
     @PreAuthorize("@ss.hasPermi('oauth:tPermission:list')")
     @GetMapping("/list")
     public TableDataInfo list(TPermission tPermission){
@@ -55,6 +63,8 @@ public class TPermissionController extends BaseController {
     /**
      * 获取详细信息
      */
+    @ApiOperation("详细信息")
+    @ApiOperationSupport(order = 5)
     @PreAuthorize("@ss.hasPermi('oauth:tPermission:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id){
@@ -64,6 +74,8 @@ public class TPermissionController extends BaseController {
     /**
      * 新增
      */
+    @ApiOperation("新增")
+    @ApiOperationSupport(order = 6)
     @PreAuthorize("@ss.hasPermi('oauth:tPermission:add')")
     @Log(title = "" , businessType = BusinessType.INSERT)
     @PostMapping("/add")
@@ -74,6 +86,8 @@ public class TPermissionController extends BaseController {
     /**
      * 修改
      */
+    @ApiOperation("修改")
+    @ApiOperationSupport(order = 7)
     @PreAuthorize("@ss.hasPermi('oauth:tPermission:edit')")
     @Log(title = "" , businessType = BusinessType.UPDATE)
     @PutMapping
@@ -84,6 +98,8 @@ public class TPermissionController extends BaseController {
     /**
      * 删除
      */
+    @ApiOperation("删除")
+    @ApiOperationSupport(order = 8)
     @PreAuthorize("@ss.hasPermi('oauth:tPermission:remove')")
     @Log(title = "" , businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
@@ -94,6 +110,8 @@ public class TPermissionController extends BaseController {
     /**
      * 导出
      */
+    @ApiOperation("导出")
+    @ApiOperationSupport(order = 2)
     @PreAuthorize("@ss.hasPermi('oauth:tPermission:export')")
     @Log(title = "" , businessType = BusinessType.EXPORT)
     @GetMapping("/export")
@@ -104,6 +122,8 @@ public class TPermissionController extends BaseController {
     /**
      * 导入列表
      */
+    @ApiOperation("导入")
+    @ApiOperationSupport(order = 3)
     @PreAuthorize("@ss.hasPermi('oauth:tPermission:import')")
     @Log(title = "" , businessType = BusinessType.IMPORT)
     @PostMapping("/importData")
@@ -114,6 +134,8 @@ public class TPermissionController extends BaseController {
     /**
      * 导出模板
      */
+    @ApiOperation("导出模板")
+    @ApiOperationSupport(order = 4)
     @PreAuthorize("@ss.hasPermi('oauth:tPermission:import')")
     @GetMapping("/importTemplate")
     public void importTemplate(HttpServletResponse response)throws IOException{

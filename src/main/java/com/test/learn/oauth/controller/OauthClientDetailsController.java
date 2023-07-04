@@ -4,11 +4,15 @@ import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.CharsetUtil;
 import com.alibaba.excel.EasyExcel;
+import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
+import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import com.test.learn.utils.AjaxResult;
 import com.test.learn.utils.BaseController;
 import com.test.learn.utils.annotation.Log;
 import com.test.learn.utils.enums.BusinessType;
 import com.test.learn.utils.page.TableDataInfo;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.URLEncoder;
@@ -33,6 +37,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
  * @author smj
  * @since 2023-07-04
  */
+@Api(tags = "Oauth2")
+@ApiSupport(author = "smj",order = 1)
 @Slf4j
 @RestController
 @RequestMapping("/oauth/oauthClientDetails")
@@ -43,6 +49,8 @@ public class OauthClientDetailsController extends BaseController {
     /**
      * 查询接入客户端信息列表
      */
+    @ApiOperation("列表")
+    @ApiOperationSupport(order = 1)
     @PreAuthorize("@ss.hasPermi('oauth:oauthClientDetails:list')")
     @GetMapping("/list")
     public TableDataInfo list(OauthClientDetails oauthClientDetails){
@@ -54,6 +62,8 @@ public class OauthClientDetailsController extends BaseController {
     /**
      * 获取接入客户端信息详细信息
      */
+    @ApiOperation("详细信息")
+    @ApiOperationSupport(order = 5)
     @PreAuthorize("@ss.hasPermi('oauth:oauthClientDetails:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id){
@@ -63,6 +73,8 @@ public class OauthClientDetailsController extends BaseController {
     /**
      * 新增接入客户端信息
      */
+    @ApiOperation("新增")
+    @ApiOperationSupport(order = 6)
     @PreAuthorize("@ss.hasPermi('oauth:oauthClientDetails:add')")
     @Log(title = "接入客户端信息" , businessType = BusinessType.INSERT)
     @PostMapping("/add")
@@ -73,6 +85,8 @@ public class OauthClientDetailsController extends BaseController {
     /**
      * 修改接入客户端信息
      */
+    @ApiOperation("修改")
+    @ApiOperationSupport(order = 7)
     @PreAuthorize("@ss.hasPermi('oauth:oauthClientDetails:edit')")
     @Log(title = "接入客户端信息" , businessType = BusinessType.UPDATE)
     @PutMapping
@@ -83,6 +97,8 @@ public class OauthClientDetailsController extends BaseController {
     /**
      * 删除接入客户端信息
      */
+    @ApiOperation("删除")
+    @ApiOperationSupport(order = 8)
     @PreAuthorize("@ss.hasPermi('oauth:oauthClientDetails:remove')")
     @Log(title = "接入客户端信息" , businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
@@ -93,6 +109,8 @@ public class OauthClientDetailsController extends BaseController {
     /**
      * 导出接入客户端信息
      */
+    @ApiOperation("导出")
+    @ApiOperationSupport(order = 2)
     @PreAuthorize("@ss.hasPermi('oauth:oauthClientDetails:export')")
     @Log(title = "接入客户端信息" , businessType = BusinessType.EXPORT)
     @GetMapping("/export")
@@ -103,6 +121,8 @@ public class OauthClientDetailsController extends BaseController {
     /**
      * 导入接入客户端信息列表
      */
+    @ApiOperation("导入")
+    @ApiOperationSupport(order = 3)
     @PreAuthorize("@ss.hasPermi('oauth:oauthClientDetails:import')")
     @Log(title = "接入客户端信息" , businessType = BusinessType.IMPORT)
     @PostMapping("/importData")
@@ -113,6 +133,8 @@ public class OauthClientDetailsController extends BaseController {
     /**
      * 导出接入客户端信息模板
      */
+    @ApiOperation("导出模板")
+    @ApiOperationSupport(order = 4)
     @PreAuthorize("@ss.hasPermi('oauth:oauthClientDetails:import')")
     @GetMapping("/importTemplate")
     public void importTemplate(HttpServletResponse response)throws IOException{
