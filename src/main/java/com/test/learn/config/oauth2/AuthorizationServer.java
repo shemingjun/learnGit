@@ -48,8 +48,8 @@ public class AuthorizationServer extends AuthorizationServerConfigurerAdapter {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-//    @Autowired
-//    private JwtAccessTokenConverter accessTokenConverter;
+    @Autowired
+    private JwtAccessTokenConverter accessTokenConverter;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -90,9 +90,9 @@ public class AuthorizationServer extends AuthorizationServerConfigurerAdapter {
         service.setSupportRefreshToken(true);//支持刷新令牌
         service.setTokenStore(tokenStore);//令牌存储策略
         //令牌增强
-//        TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
-//        tokenEnhancerChain.setTokenEnhancers(Arrays.asList(accessTokenConverter));
-//        service.setTokenEnhancer(tokenEnhancerChain);
+        TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
+        tokenEnhancerChain.setTokenEnhancers(Arrays.asList(accessTokenConverter));
+        service.setTokenEnhancer(tokenEnhancerChain);
 
         service.setAccessTokenValiditySeconds(7200); // 令牌默认有效期2小时
         service.setRefreshTokenValiditySeconds(259200); // 刷新令牌默认有效期3天
