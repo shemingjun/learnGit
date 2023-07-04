@@ -21,3 +21,13 @@ mybatis-plus:
   type-aliases-package: com.test.learn.**.entity,com.test.learn.**.dto
   # 搜索指定包别名
   mapper-locations: classpath*:mybatis/**/*Mapper.xml
+
+
+
+#PageHelper分页插件
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
+  autoRuntimeDialect: true
