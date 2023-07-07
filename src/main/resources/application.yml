@@ -55,7 +55,7 @@ spring:
       primary: master
       datasource:
         master:
-          url: jdbc:mysql://localhost:3306/user_db?characterEncoding=utf8&useSSL=false&autoReconnect=true&serverTimezone=UTC
+          url: jdbc:mysql://localhost:3306/oauth2?characterEncoding=utf8&useSSL=false&autoReconnect=true&serverTimezone=UTC
           username: root
           password: 123456
           driver-class-name: com.mysql.cj.jdbc.Driver

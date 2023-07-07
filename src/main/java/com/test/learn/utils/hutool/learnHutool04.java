@@ -21,6 +21,9 @@ import java.util.stream.Collectors;
 @Slf4j
 public class learnHutool04 {
     public static void main(String[] args) {
+        log.info("上周:{}", DateUtil.lastWeek());
+        log.info("上周的第一天:{}", DateUtil.beginOfWeek(DateUtil.lastWeek()));
+        log.info("上周的最后一天:{}", DateUtil.endOfWeek(DateUtil.lastWeek()));
         log.info("当前时间:{}", DateUtil.now());
         log.info("当前时间:{}", DateUtil.date());
         log.info("当前时间:{}", DateUtil.dateSecond());
