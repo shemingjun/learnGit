@@ -2,10 +2,16 @@ package com.test.learn.config.oauth2;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
+
+import java.security.KeyPair;
 
 /**
  * @author Administrator
@@ -25,13 +31,22 @@ public class TokenConfig {
     @Bean
     public JwtAccessTokenConverter accessTokenConverter() {
         JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-        converter.setSigningKey(SIGNING_KEY); //对称秘钥，资源服务器使用该秘钥来验证
+        //对称秘钥，资源服务器使用该秘钥来验证
+        converter.setSigningKey(SIGNING_KEY);
+
+        KeyPair keyPair = new KeyStoreKeyFactory(
+                new ClassPathResource("keystore.jks"), "foobar".toCharArray())
+                .getKeyPair("test");
+        converter.setKeyPair(keyPair);
+
         return converter;
     }
 
-//    @Bean
-//    public TokenStore tokenStore() {
-//        //使用内存存储令牌（普通令牌）
-//        return new InMemoryTokenStore();
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder(16);
+    }
+    //    public NoOpPasswordEncoder passwordEncoder(){
+//        return (NoOpPasswordEncoder)NoOpPasswordEncoder.getInstance();
 //    }
 }

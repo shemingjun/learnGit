@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
@@ -35,19 +36,19 @@ import javax.sql.DataSource;
 @EnableAuthorizationServer
 public class AuthorizationServer extends AuthorizationServerConfigurerAdapter {
 
-    @Autowired
+    @Resource
     private TokenStore tokenStore;
 
-    @Autowired
+    @Resource
     private ClientDetailsService clientDetailsService;
 
-//    @Autowired
-//    private AuthorizationCodeServices authorizationCodeServices;
+    @Resource
+    private PasswordEncoder passwordEncoder;
 
-    @Autowired
+    @Resource
     private AuthenticationManager authenticationManager;
 
-    @Autowired
+    @Resource
     private JwtAccessTokenConverter accessTokenConverter;
 
     @Resource
@@ -111,15 +112,20 @@ public class AuthorizationServer extends AuthorizationServerConfigurerAdapter {
                 .tokenStore(tokenStore)
 
                 .accessTokenConverter(accessTokenConverter)
-                .allowedTokenEndpointRequestMethods(HttpMethod.POST);
+//                .allowedTokenEndpointRequestMethods(HttpMethod.POST)
+        ;
     }
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security){
         security
-                .tokenKeyAccess("permitAll()")                    //oauth/token_key是公开
-                .checkTokenAccess("permitAll()")                  //oauth/check_token公开
-                .allowFormAuthenticationForClients()				//表单认证（申请令牌）
+                .passwordEncoder(passwordEncoder)
+                //oauth/token_key是公开
+                .tokenKeyAccess("permitAll()")
+                //oauth/check_token公开
+                .checkTokenAccess("permitAll()")
+                //表单认证（申请令牌）
+                .allowFormAuthenticationForClients()
                 .authenticationEntryPoint(new OAuth2AuthenticationEntryPoint())
         ;
     }

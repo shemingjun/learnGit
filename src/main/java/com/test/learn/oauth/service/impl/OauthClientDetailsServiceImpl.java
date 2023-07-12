@@ -31,6 +31,7 @@ import com.test.learn.utils.Constants;
 import com.test.learn.utils.exception.ServiceException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
@@ -46,6 +47,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.URLEncoder;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -70,44 +72,27 @@ public class OauthClientDetailsServiceImpl extends ServiceImpl<OauthClientDetail
     private OauthClientDetailsMapper oauthClientDetailsMapper;
     @Resource(name = "threadPoolTaskExecutor")
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
+    @Resource
+    private PasswordEncoder passwordEncoder;
 
     @Override
-    public int saveOauthClientDetails(OauthClientDetails oauthClientDetails) {
-        int result = 0;
-        if (oauthClientDetailsMapper.exists(new LambdaQueryWrapper<OauthClientDetails>()
-                .eq(OauthClientDetails::getResourceIds,oauthClientDetails.getResourceIds())
-                .eq(OauthClientDetails::getClientSecret,oauthClientDetails.getClientSecret())
-                .eq(OauthClientDetails::getScope,oauthClientDetails.getScope())
-                .eq(OauthClientDetails::getAuthorizedGrantTypes,oauthClientDetails.getAuthorizedGrantTypes())
-                .eq(OauthClientDetails::getWebServerRedirectUri,oauthClientDetails.getWebServerRedirectUri())
-                .eq(OauthClientDetails::getAuthorities,oauthClientDetails.getAuthorities())
-                .eq(OauthClientDetails::getAccessTokenValidity,oauthClientDetails.getAccessTokenValidity())
-                .eq(OauthClientDetails::getRefreshTokenValidity,oauthClientDetails.getRefreshTokenValidity())
-                .eq(OauthClientDetails::getAdditionalInformation,oauthClientDetails.getAdditionalInformation())
-                .eq(OauthClientDetails::getCreateTime,oauthClientDetails.getCreateTime())
-                .eq(OauthClientDetails::getArchived,oauthClientDetails.getArchived())
-                .eq(OauthClientDetails::getTrusted,oauthClientDetails.getTrusted())
-                .eq(OauthClientDetails::getAutoapprove,oauthClientDetails.getAutoapprove())
-            )){
-            result = oauthClientDetailsMapper.update(oauthClientDetails,new LambdaQueryWrapper<OauthClientDetails>()
-                    .eq(OauthClientDetails::getResourceIds,oauthClientDetails.getResourceIds())
-                    .eq(OauthClientDetails::getClientSecret,oauthClientDetails.getClientSecret())
-                    .eq(OauthClientDetails::getScope,oauthClientDetails.getScope())
-                    .eq(OauthClientDetails::getAuthorizedGrantTypes,oauthClientDetails.getAuthorizedGrantTypes())
-                    .eq(OauthClientDetails::getWebServerRedirectUri,oauthClientDetails.getWebServerRedirectUri())
-                    .eq(OauthClientDetails::getAuthorities,oauthClientDetails.getAuthorities())
-                    .eq(OauthClientDetails::getAccessTokenValidity,oauthClientDetails.getAccessTokenValidity())
-                    .eq(OauthClientDetails::getRefreshTokenValidity,oauthClientDetails.getRefreshTokenValidity())
-                    .eq(OauthClientDetails::getAdditionalInformation,oauthClientDetails.getAdditionalInformation())
-                    .eq(OauthClientDetails::getCreateTime,oauthClientDetails.getCreateTime())
-                    .eq(OauthClientDetails::getArchived,oauthClientDetails.getArchived())
-                    .eq(OauthClientDetails::getTrusted,oauthClientDetails.getTrusted())
-                    .eq(OauthClientDetails::getAutoapprove,oauthClientDetails.getAutoapprove())
-            );
-        } else {
-            result = oauthClientDetailsMapper.insert(oauthClientDetails);
+    public AjaxResult saveOauthClientDetails(OauthClientDetails oauthClientDetails) {
+        if (StrUtil.isEmpty(oauthClientDetails.getClientId())){
+            return AjaxResult.error("client_id is required");
         }
-        return result;
+        if (StrUtil.length(oauthClientDetails.getClientId()) < 5){
+            return AjaxResult.error("client_id 长度至少5位");
+        }
+        if (oauthClientDetailsMapper.exists(new LambdaQueryWrapper<OauthClientDetails>()
+                .eq(OauthClientDetails::getClientId,oauthClientDetails.getClientId()))){
+            return AjaxResult.error("client_id [" + oauthClientDetails.getClientId() + "] 已存在");
+        }
+        oauthClientDetails.setSecret(oauthClientDetails.getClientSecret());
+        oauthClientDetails.setClientSecret(passwordEncoder.encode(oauthClientDetails.getClientSecret()));
+        oauthClientDetails.setCreateTime(LocalDateTime.now());
+        oauthClientDetailsMapper.insert(oauthClientDetails);
+
+        return AjaxResult.success(oauthClientDetails);
     }
 
     @Override

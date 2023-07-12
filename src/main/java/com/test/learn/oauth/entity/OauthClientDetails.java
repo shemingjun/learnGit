@@ -48,7 +48,7 @@ public class OauthClientDetails extends Model<OauthClientDetails> {
     @NotEmpty(message = "客户端标	识不能为空")
     @TableField(value = "client_id")
     @ExcelProperty(value = "客户端标	识")
-    private Long clientId;
+    private String clientId;
 
     /**
      * 接入资源列表
@@ -63,6 +63,13 @@ public class OauthClientDetails extends Model<OauthClientDetails> {
     @TableField(value = "client_secret")
     @ExcelProperty(value = "客户端秘钥")
     private String clientSecret;
+
+    /**
+     * 客户端秘钥
+     */
+    @TableField(value = "secret")
+    @ExcelProperty(value = "客户端秘钥对外")
+    private String secret;
 
     @TableField(value = "scope")
     @ExcelProperty(value = "")

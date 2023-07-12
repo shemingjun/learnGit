@@ -18,7 +18,7 @@ public interface IOauthClientDetailsService extends IService<OauthClientDetails>
     /**
      * 保存接入客户端信息信息
      */
-    int saveOauthClientDetails(OauthClientDetails oauthClientDetails);
+    AjaxResult saveOauthClientDetails(OauthClientDetails oauthClientDetails);
 
     /**
      * 修改接入客户端信息信息

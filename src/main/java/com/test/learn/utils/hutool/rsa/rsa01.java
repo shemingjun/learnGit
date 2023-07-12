@@ -30,9 +30,11 @@ public class rsa01 {
 //获得私钥
         rsa.getPrivateKey();
         rsa.getPrivateKeyBase64();
+        log.info("getPrivateKeyBase64:{}", rsa.getPrivateKeyBase64());
 //获得公钥
         rsa.getPublicKey();
         rsa.getPublicKeyBase64();
+        log.info("getPublicKeyBase64:{}", rsa.getPublicKeyBase64());
 
         String params = "我是一段测试aaaa ceshi @#$%qweere 中文测试";
 //公钥加密，私钥解密

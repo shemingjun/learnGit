@@ -79,7 +79,7 @@ public class OauthClientDetailsController extends BaseController {
     @Log(title = "接入客户端信息" , businessType = BusinessType.INSERT)
     @PostMapping("/add")
     public AjaxResult add(@RequestBody OauthClientDetails oauthClientDetails){
-        return toAjax(oauthClientDetailsService.saveOauthClientDetails(oauthClientDetails));
+        return oauthClientDetailsService.saveOauthClientDetails(oauthClientDetails);
     }
 
     /**

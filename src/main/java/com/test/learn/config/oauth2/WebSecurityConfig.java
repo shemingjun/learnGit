@@ -5,14 +5,19 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import javax.annotation.Resource;
 
 /**
  * @author Administrator
@@ -21,6 +26,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Resource
+    private PasswordEncoder passwordEncoder;
 
     //认证管理器
     @Override
@@ -36,24 +44,27 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     //密码编码器
-    @Bean
+//    @Bean
 //    public PasswordEncoder passwordEncoder() {
 //        return new BCryptPasswordEncoder();
 //    }
-    public NoOpPasswordEncoder passwordEncoder(){
-        return (NoOpPasswordEncoder)NoOpPasswordEncoder.getInstance();
-    }
+//    public NoOpPasswordEncoder passwordEncoder(){
+//        return (NoOpPasswordEncoder)NoOpPasswordEncoder.getInstance();
+//    }
+
+//    public PasswordEncoder passwordEncoder() {
+//        return new BCryptPasswordEncoder(8);
+//    }
 
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.jdbcAuthentication().passwordEncoder(passwordEncoder());
+        auth.jdbcAuthentication().passwordEncoder(passwordEncoder);
     }
 
 
 
-//安全拦截机制（最重要）
-
+    //安全拦截机制（最重要）
     /**
      * anyRequest          |   匹配所有请求路径
      * access              |   SpringEl表达式结果为true时可以访问

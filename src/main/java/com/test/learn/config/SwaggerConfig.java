@@ -47,7 +47,7 @@ public class SwaggerConfig {
         return new ApiInfoBuilder()
                 .title("Swagger接口文档")
                 .description("如有疑问，请联系开发工程师")
-                .contact(new Contact("smj", "http://localhost:8082/doc.html", "smj@qq.com"))
+                .contact(new Contact("smj", "http://localhost:8282/doc.html", "smj@qq.com"))
                 .version("1.0")
                 .build();
     }
