@@ -2,6 +2,7 @@ package com.test.learn.easyexcel.write;
 
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
+import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.util.ListUtils;
 import com.alibaba.excel.write.metadata.WriteSheet;
 import com.test.learn.easyexcel.entity.DemoData;
@@ -17,6 +18,8 @@ import java.util.List;
  * @ProjectName learnGit
  * @packageName com.test.learn.easyexcel.write
  * @date 2023/8/24 19:21
+ *
+ * 使用{@link ExcelProperty}注解指定复杂的头* *
  */
 @Slf4j
 public class repeatedWrite {
