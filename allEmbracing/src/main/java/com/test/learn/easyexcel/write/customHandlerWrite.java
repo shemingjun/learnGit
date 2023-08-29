@@ -17,6 +17,14 @@ import java.util.List;
  * @ProjectName learnGit
  * @packageName com.test.learn.easyexcel.write
  * @date 2023/8/29 17:53
+ *
+ * 下拉，超链接等自定义拦截器（上面几点都不符合但是要对单元格进行操作的参照这个）
+ * demo这里实现2点。1. 对第一行第一列的头超链接到:https://github.com/alibaba/easyexcel
+ *                2. 对第一列第一行和第二行的数据新增下拉框，显示 测试1 测试2
+ * 1. 创建excel对应的实体对象 参照{@link DemoData}
+ * 2. 注册拦截器 {@link CustomCellWriteHandler} {@link CustomSheetWriteHandler}
+ *
+ *
  */
 @Slf4j
 public class customHandlerWrite {
