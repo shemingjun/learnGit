@@ -84,7 +84,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-
                 // 对于登录login 注册register 验证码captchaImage 允许匿名访问
                 .antMatchers("/login", "/register", "/captchaImage").anonymous()
                 .antMatchers(
@@ -108,7 +107,26 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
+                .permitAll()
         ;
 
+    }
+
+    /**
+     * Override this method to configure {@link WebSecurity}. For example, if you wish to
+     * ignore certain requests.
+     * <p>
+     * Endpoints specified in this method will be ignored by Spring Security, meaning it
+     * will not protect them from CSRF, XSS, Clickjacking, and so on.
+     * <p>
+     * Instead, if you want to protect endpoints against common vulnerabilities, then see
+     * {@link #configure(HttpSecurity)} and the {@link HttpSecurity#authorizeRequests}
+     * configuration method.
+     *
+     * @param web
+     */
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/public/**");
     }
 }

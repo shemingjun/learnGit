@@ -22,6 +22,7 @@ public class demo01 {
     @PostMapping("/list")
     public JSONObject s(@RequestBody JSONObject param){
         log.info("{}",param);
+        param.put("age", 33);
         return param;
     }
 

@@ -80,7 +80,7 @@ mybatis-plus:
 logging:
   level:
     com.test.learn: debug
-    org.springframework: info
+    org.springframework: debug
     org.spring.springboot.dao: debug
   config: classpath:logback.xml
 
