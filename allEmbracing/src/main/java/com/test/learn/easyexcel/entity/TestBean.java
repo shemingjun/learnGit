@@ -1,5 +1,6 @@
 package com.test.learn.easyexcel.entity;
 
+import cn.hutool.core.annotation.Alias;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,6 +19,8 @@ import java.util.Date;
 @Setter
 @EqualsAndHashCode
 public class TestBean {
+
+    @Alias(value = "姓名")
     private String name;
     private int age;
     private double score;
