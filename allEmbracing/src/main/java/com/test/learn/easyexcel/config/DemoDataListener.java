@@ -69,7 +69,7 @@ public class DemoDataListener implements ReadListener<DemoData> {
      */
     @Override
     public void invokeHead(Map<Integer, ReadCellData<?>> headMap, AnalysisContext context) {
-        log.info("onHead：{}", headMap);
+        log.info("onHead：{}", JSON.toJSONString(headMap));
         ReadListener.super.invokeHead(headMap, context);
     }
 
