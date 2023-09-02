@@ -37,6 +37,9 @@ public class DemoDataListener implements ReadListener<DemoData> {
 
     private UserDao userDao;
 
+    public DemoDataListener() {
+        userDao = new UserDao();
+    }
     /**
      * 有参构造函数
      * 如果使用了spring,请使用这个构造方法。每次创建Listener的时候需要把spring管理的类传进来
