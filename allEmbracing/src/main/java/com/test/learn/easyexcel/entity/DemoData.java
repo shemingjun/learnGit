@@ -1,5 +1,6 @@
 package com.test.learn.easyexcel.entity;
 
+import cn.hutool.core.annotation.Alias;
 import com.alibaba.excel.annotation.ExcelIgnore;
 import com.alibaba.excel.annotation.ExcelProperty;
 import lombok.EqualsAndHashCode;
@@ -21,10 +22,13 @@ import java.util.Date;
 @EqualsAndHashCode
 public class DemoData {
     @ExcelProperty("字符串标题")
+    @Alias("字符串标题")
     private String string;
     @ExcelProperty("日期标题")
+    @Alias("日期标题")
     private Date date;
     @ExcelProperty("数字标题")
+    @Alias("数字标题")
     private Double doubleData;
 
     /**
