@@ -1,4 +1,4 @@
-package com.test.learn;
+package com.test.learn.utils.hutool;
 
 import cn.hutool.core.collection.IterUtil;
 import cn.hutool.extra.tokenizer.Result;

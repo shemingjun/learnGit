@@ -1,4 +1,4 @@
-package com.test.learn;
+package com.test.learn.utils.hutool;
 
 import cn.hutool.extra.pinyin.PinyinUtil;
 import cn.hutool.extra.pinyin.engine.pinyin4j.Pinyin4jEngine;
