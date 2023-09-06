@@ -73,6 +73,12 @@
             <version>3.3</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.ibeetl/beetl-framework-starter -->
+        <dependency>
+            <groupId>com.ibeetl</groupId>
+            <artifactId>beetl-framework-starter</artifactId>
+            <version>1.2.40.Beetl.RELEASE</version>
+        </dependency>
 
     </dependencies>
 </project>
